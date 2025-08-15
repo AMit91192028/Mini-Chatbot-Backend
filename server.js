@@ -1,17 +1,29 @@
-require('dotenv').config()
 const app = require('./src/app')
 const{createServer} = require("http")
 const{Server} = require("socket.io")
 const httpServer = createServer(app)
-const io = new Server(httpServer,{
-    cors:{
-        origin:"http://localhost:5173"
-    }
-})
+const allowedOrigins = [
+  'https://mini-chatbot-six.vercel.app',
+  'http://localhost:5173'
+];
 
-const connectToDB = require('./src/db/db.js')
+const io = new Server(httpServer, {
+  cors: {
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (!allowedOrigins.includes(origin)) {
+        return callback(new Error('The CORS policy for this site does not allow access from the specified Origin.'), false);
+      }
+      return callback(null, true);
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }
+});
+
+
 const generateResponse = require("./src/services/ai.service.js")
-console.log(generateResponse)
 
 const chatHistory =[]
 io.on("connection",(socket)=>{
