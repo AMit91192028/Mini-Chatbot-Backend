@@ -10,10 +10,7 @@ async function genrateResponse(chatHistory) {
 
     latestText = latestText.trim().toLowerCase();
 
-    if (latestText.includes("pushpa")) {
-        return "Pushpa? She’s the love story Amit never wants to end ❤️";
-    } 
-    else if (latestText.includes("create") || latestText.includes("made you") || latestText.includes("who build")) {
+  if (latestText.includes("create") || latestText.includes("made you") || latestText.includes("who build")||latestText.includes("creator")) {
         return "Amit Yadav";
     } 
     else {
@@ -21,7 +18,7 @@ async function genrateResponse(chatHistory) {
             model: "gemini-2.0-flash",
             contents: chatHistory,
         });
-        return response.text();
+        return response.text;
     }
 }
 
